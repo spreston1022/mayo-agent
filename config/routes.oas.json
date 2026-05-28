@@ -1,0 +1,88 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Mayo Clinical Agent MCP Server"
+  },
+  "paths": {
+    "/path-1": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "get": {
+        "summary": "Echo Endpoint",
+        "description": "this endpoint simply echoes back request headers sent by the client",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "https://echo.zuplo.io"
+            }
+          },
+          "policies": {
+            "inbound": []
+          }
+        },
+        "operationId": "echo-endpoint"
+      }
+    },
+    "/path-2": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "get": {
+        "summary": "PHI",
+        "description": "this provides phi user data",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "default",
+            "module": "$import(./modules/hello-world)",
+            "options": {}
+          },
+          "policies": {
+            "inbound": []
+          }
+        },
+        "operationId": "phi-data"
+      }
+    },
+    "/mcp": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "post": {
+        "summary": "MCP Server",
+        "description": "Mayo Clinical Agent MCP Server",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "mcpServerHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "operations": [
+                {
+                  "file": "./config/routes.oas.json",
+                  "id": "echo-endpoint"
+                },
+                {
+                  "file": "./config/routes.oas.json",
+                  "id": "phi-data"
+                }
+              ]
+            }
+          },
+          "policies": {
+            "inbound": [
+              "auth0-jwt-inbound",
+              "phi-scope-check"
+            ]
+          }
+        },
+        "operationId": "mcp-agent"
+      }
+    }
+  }
+}
