@@ -7,9 +7,10 @@
         "module": "$import(@zuplo/runtime)",
         "export": "Auth0JwtInboundPolicy",
         "options": {
-          "oAuthResourceMetadataEnabled": false,
+          "allowUnauthenticatedRequests": false,
           "audience": "https://gateway.company.com/mcp",
-          "issuerBaseURL": "https://dev-l3ayzqncrfw3ta50.us.auth0.com"
+          "auth0Domain": "dev-l3ayzqncrfw3ta50.us.auth0.com",
+          "oAuthResourceMetadataEnabled": false
         }
       }
     },
